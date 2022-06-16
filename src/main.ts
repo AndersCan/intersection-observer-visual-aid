@@ -4,17 +4,20 @@ import "./box.scss";
 import "./floating-viewport.scss";
 
 import { html, render } from "./helpers";
+import { getInitialState } from "./get-initial-state";
 
-const state: ObserveProps = {
-  intersectionThreshold: 0,
-  marginTop: 20,
-  marginBot: 20,
-  marginLeft: 0,
-  marginRight: 0,
-};
+export interface StateProps {
+  threshold: number;
+  marginTop: number;
+  marginBot: number;
+  marginLeft: number;
+  marginRight: number;
+}
+
+const state = getInitialState();
 
 const oppositeMap = {
-  intersectionThreshold: "intersectionThreshold",
+  threshold: "threshold",
   marginTop: "marginBot",
   marginBot: "marginTop",
   marginLeft: "marginRight",
@@ -41,41 +44,41 @@ const formHtml = render(
       <legend>Intersection Threshold</legend>
       <input
         type="range"
-        value="0"
+        value="${state.threshold}"
         min="0"
         max="1"
         step="0.1"
-        name="intersectionThreshold"
+        name="threshold"
         oninput="this.nextElementSibling.value = this.value"
       />
-      <output>0</output>
+      <output>${state.threshold}</output>
     </fieldset>
     <fieldset>
       <legend>Margin top</legend>
       <input
         type="range"
-        value="25"
-        min="0"
+        value="${state.marginTop}"
+        min="-99"
         max="99"
         step="1"
         name="marginTop"
-        oninput="this.nextElementSibling.value = this.value"
+        oninput="this.nextElementSibling.value = this.value + '%'"
       />
-      <output>25</output>
+      <output>${state.marginTop}%</output>
     </fieldset>
 
     <fieldset>
       <legend>Margin bottom</legend>
       <input
         type="range"
-        value="25"
-        min="0"
+        value="${state.marginBot}"
+        min="-99"
         max="99"
         step="1"
         name="marginBot"
-        oninput="this.nextElementSibling.value = this.value"
+        oninput="this.nextElementSibling.value = this.value+ '%'"
       />
-      <output>25</output>
+      <output>${state.marginBot}%</output>
     </fieldset>`
 );
 const description = render(
@@ -112,7 +115,7 @@ app.innerHTML = description + formHtml + boxes;
 
 app.addEventListener("change", (event) => {
   const target = event.target as HTMLInputElement;
-  const name = target.name as keyof ObserveProps;
+  const name = target.name as keyof StateProps;
   const value = Number(target.value);
 
   state[name] = value;
@@ -134,26 +137,13 @@ app.addEventListener("change", (event) => {
   observe(state);
 });
 
-interface ObserveProps {
-  intersectionThreshold: number;
-  marginTop: number;
-  marginBot: number;
-  marginLeft: number;
-  marginRight: number;
-}
 let io: IntersectionObserver | undefined = undefined;
 
 observe(state);
-function observe(props: ObserveProps) {
+function observe(props: StateProps) {
   const floater = document.querySelector<HTMLDivElement>("#floater")!;
 
-  const {
-    marginTop,
-    marginBot,
-    marginLeft,
-    marginRight,
-    intersectionThreshold,
-  } = props;
+  const { marginTop, marginBot, marginLeft, marginRight, threshold } = props;
 
   if (io) {
     io.disconnect();
@@ -169,14 +159,14 @@ function observe(props: ObserveProps) {
     },
     {
       root: null,
-      rootMargin: `-${marginTop}% ${marginRight}% -${marginBot}% ${marginLeft}%`,
-      threshold: [intersectionThreshold],
+      rootMargin: `${marginTop}% ${marginRight}% ${marginBot}% ${marginLeft}%`,
+      threshold: [threshold],
     }
   );
-  // top is equal to `-top`
-  floater.style.top = `${marginTop}%`;
+  // top is equal to `top`
+  floater.style.top = `${-marginTop}%`;
   // height
-  floater.style.height = `${100 - marginBot - marginTop}%`;
+  floater.style.height = `${100 + marginBot + marginTop}%`;
 
   // const boxes = Array.from(document.querySelectorAll(".box-110") || []);
   const boxes = Array.from(document.querySelectorAll(".box") || []);

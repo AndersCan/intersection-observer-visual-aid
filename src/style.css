@@ -8,9 +8,14 @@ main {
 
 fieldset {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
 }
-
+fieldset input {
+  width: clamp(15ch, 50%, 30ch);
+}
+output {
+  margin: 0 1rem;
+}
 p {
   width: clamp(45ch, 50%, 75ch);
   margin: 1rem;
