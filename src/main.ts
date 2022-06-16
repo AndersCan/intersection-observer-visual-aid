@@ -88,31 +88,18 @@ const formHtml = render(
 const description = render(
   html`<h1>IntersectionObserver visulizer</h1>
     <p>
-      Better understand the
+      Visualize the
       <a
         href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
         >IntersectionObserver</a
       >
-      with this playground.
-    </p>
-    <p>
-      Elements entering and exiting the "virtual viewport" will change
-      background color.
-    </p>
-    <p>
-      Change the margin sliders to move the viewport. You can also change the
-      threshold slider to decide how much an element must intersect with the
-      viewport before being determined as visible.
-    </p>
-    <p>
-      Please note that using a threshold other than 0 will often not work well
-      for large elements and small screens/viewports. Set the threshold to 1 and
-      scroll to the bottom to see this in action.
-      <i>
-        (Spoiler: Elements that are larger than the users screen will never
-        reach an intersection of 1)</i
+      with this playground. Check
+      <a
+        href="https://github.com/AndersCan/intersection-observer-visual-aid#readme"
+        >the repo for</a
       >
-    </p>`
+      more info.
+    </p> `
 );
 
 app.innerHTML = description + formHtml + boxes;
