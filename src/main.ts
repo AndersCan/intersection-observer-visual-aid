@@ -33,7 +33,11 @@ const boxes = render(
   heights.map((height) => {
     return render(
       html`<div class="block">
-        <div class="box box-${height}">${height}vh</div>
+        <div class="box box-${height}">
+          ${height}vh
+          <div class="intersection-box intersection-box--top"></div>
+          <div class="intersection-box intersection-box--bot"></div>
+        </div>
       </div>`
     );
   })
@@ -172,5 +176,21 @@ function observe(props: StateProps) {
   const boxes = Array.from(document.querySelectorAll(".box") || []);
   for (const box of boxes) {
     io.observe(box);
+  }
+
+  const interSectionboxesTop = Array.from(
+    document.querySelectorAll(".intersection-box.intersection-box--top") || []
+  ) as HTMLDivElement[];
+  for (const box of interSectionboxesTop) {
+    box.style.height = `${threshold * 100}%`;
+  }
+
+  const interSectionboxesBot = Array.from(
+    document.querySelectorAll(".intersection-box.intersection-box--bot") || []
+  ) as HTMLDivElement[];
+  for (const box of interSectionboxesBot) {
+    const tPercent = threshold * 100;
+    box.style.top = `${100 - tPercent}%`;
+    // box.style.height = `${100 - tPercent}%`;
   }
 }

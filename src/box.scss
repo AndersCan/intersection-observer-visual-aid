@@ -14,6 +14,7 @@
   margin: 2rem;
   width: 50vw;
   background-color: antiquewhite;
+  position: relative;
 
   @for $i from 1 through 11 {
     &.box-#{$i * 10} {
@@ -23,5 +24,35 @@
 
   &.box--visible {
     background-color: goldenrod;
+  }
+}
+
+.intersection-box {
+  position: absolute;
+  left: 0;
+  opacity: 0.25;
+  width: 100%;
+  pointer-events: none;
+
+  &--top {
+    top: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px
+    );
+  }
+
+  &--bot {
+    bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px
+    );
   }
 }
