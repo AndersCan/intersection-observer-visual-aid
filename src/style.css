@@ -17,6 +17,5 @@ output {
   margin: 0 1rem;
 }
 p {
-  width: clamp(45ch, 50%, 75ch);
-  margin: 1rem;
+  width: clamp(80vw, 50%, 75ch);
 }

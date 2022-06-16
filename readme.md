@@ -18,9 +18,9 @@ We do this by changing the `threshold` and the `rootMargin` options [(docs)](htt
 
 The playground contains a _"virtual viewport"_ that can be changed by modifying the margins. Positive margins increase the size while negative reduce.
 
-Elements that enter the virtual viewport will change background color to signal that they are now visible.
+The box elements that enter the virtual viewport, after scrolling, will change background color to signal that they are now visible.
 
-By changing the `threshold` we can decide how much of an element must be within the viewport before being visible. This area is shown on the boxes as _grayed out_
+By changing the `threshold` we can decide how much of an element must be within the viewport before being visible. This area is shown on the boxes as _grayed out_. A threshold of 1 requires the entire element to be inside the viewport.
 
 ## Examples
 
@@ -31,6 +31,6 @@ By changing the `threshold` we can decide how much of an element must be within 
   See what happens when we have a small viewport with max threshold
   > Spoiler: Elements that are larger than the viewport will never reach an intersection of 1.
 
-## Support
+## Support & bug reports
 
-Spot a bug? _TOO BAD._
+Spot a bug or require support? [Please comment here.](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
