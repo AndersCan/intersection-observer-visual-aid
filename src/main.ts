@@ -5,6 +5,7 @@ import "./floating-viewport.scss";
 
 import { html, render } from "./helpers";
 import { getInitialState } from "./get-initial-state";
+import { assert } from "./assert";
 
 export interface StateProps {
   threshold: number;
@@ -17,7 +18,7 @@ export interface StateProps {
 const state = getInitialState();
 
 const oppositeMap = {
-  threshold: "threshold",
+  threshold: false,
   marginTop: "marginBot",
   marginBot: "marginTop",
   marginLeft: "marginRight",
@@ -62,8 +63,8 @@ const formHtml = render(
       <input
         type="range"
         value="${state.marginTop}"
-        min="-99"
-        max="99"
+        min="-49"
+        max="49"
         step="1"
         name="marginTop"
         oninput="this.nextElementSibling.value = this.value + '%'"
@@ -76,8 +77,8 @@ const formHtml = render(
       <input
         type="range"
         value="${state.marginBot}"
-        min="-99"
-        max="99"
+        min="-49"
+        max="49"
         step="1"
         name="marginBot"
         oninput="this.nextElementSibling.value = this.value+ '%'"
@@ -99,7 +100,8 @@ const description = render(
         >the repo for</a
       >
       more info.
-    </p> `
+    </p>
+    <p>Note: Changing margin left and right has not been added</p>`
 );
 
 app.innerHTML = description + formHtml + boxes;
@@ -109,22 +111,31 @@ app.addEventListener("change", (event) => {
   const name = target.name as keyof StateProps;
   const value = Number(target.value);
 
-  state[name] = value;
-
   const oppositeKey = oppositeMap[name];
-  const opposite = document.querySelector(
+  const oppositeEl = document.querySelector(
     `[name=${oppositeKey}]`
   ) as HTMLInputElement;
 
-  const oppositeValue = Number(opposite.value);
-  if (value + oppositeValue >= 100) {
-    console.warn(
-      `${name} + ${oppositeKey} is greater than 100 - setting ${oppositeKey} to zero`
-    );
-    state[oppositeKey] = 0;
-    opposite.value = "0";
+  try {
+    assert(oppositeKey);
+    assert(oppositeEl);
+
+    const oppositeValue = Number(oppositeEl.value);
+    if (value + oppositeValue >= 100 || value + oppositeValue <= -100) {
+      console.warn(
+        `${name} + ${oppositeKey} is overflowing 100 or -100: setting ${oppositeKey} to zero`
+      );
+      // const newValue = 0;
+      // state[oppositeKey] = newValue;
+      // oppositeEl.value = `${newValue}`;
+      // //@ts-expect-error trust me bro
+      // oppositeEl.nextElementSibling.value = `${newValue}`;
+    }
+  } catch (err) {
+    // its ok
   }
 
+  state[name] = value;
   observe(state);
 });
 
@@ -168,16 +179,18 @@ function observe(props: StateProps) {
   const interSectionboxesTop = Array.from(
     document.querySelectorAll(".intersection-box.intersection-box--top") || []
   ) as HTMLDivElement[];
+
   for (const box of interSectionboxesTop) {
-    box.style.height = `${threshold * 100}%`;
+    const tPercent = threshold * 100;
+    box.style.height = `${tPercent}%`;
   }
 
   const interSectionboxesBot = Array.from(
     document.querySelectorAll(".intersection-box.intersection-box--bot") || []
   ) as HTMLDivElement[];
+
   for (const box of interSectionboxesBot) {
     const tPercent = threshold * 100;
     box.style.top = `${100 - tPercent}%`;
-    // box.style.height = `${100 - tPercent}%`;
   }
 }

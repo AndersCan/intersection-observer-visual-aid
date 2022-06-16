@@ -2,7 +2,7 @@
 
 Playground for visualising what the IntersectionObserver is doing. Created to highlight the issues shown under [examples](#examples)
 
-[Playground](https://anderscan.github.io/intersection-observer-visual-aid/?marginTop=-40&marginBot=-40&threshold=0.2)
+➡️ [Playground](https://anderscan.github.io/intersection-observer-visual-aid/?marginTop=-40&marginBot=-40&threshold=0.2)
 
 ## Basics
 
@@ -14,6 +14,8 @@ We do this by changing the `threshold` and the `rootMargin` options [(docs)](htt
 
 ## Playground
 
+![screenshot of playground](/screenshot.png)
+
 The playground contains a _"virtual viewport"_ that can be changed by modifying the margins. Positive margins increase the size while negative reduce.
 
 Elements that enter the virtual viewport will change background color to signal that they are now visible.
@@ -22,12 +24,13 @@ By changing the `threshold` we can decide how much of an element must be within 
 
 ## Examples
 
-Small viewport: https://anderscan.github.io/intersection-observer-visual-aid/?marginTop=-40&marginBot=-40
+- [Default values](https://anderscan.github.io/intersection-observer-visual-aid/?marginTop=0&marginBot=0&threshold=0)
+  Shows the `IntersectionObserver` with default values. Here an element with `1px` inside the viewport is considered visible.
 
-See what happens when we have a small viewport with max threshold: https://anderscan.github.io/intersection-observer-visual-aid/?marginTop=-40&marginBot=-40&threshold=1
-
-> Spoiler: Elements that are larger than the viewport will never reach an intersection of 1.
+- [Small viewport with high threshold](https://anderscan.github.io/intersection-observer-visual-aid/?marginTop=-40&marginBot=-40&threshold=1)
+  See what happens when we have a small viewport with max threshold
+  > Spoiler: Elements that are larger than the viewport will never reach an intersection of 1.
 
 ## Support
 
-Spot a bug? TOO BAD.
+Spot a bug? _TOO BAD._
