@@ -87,7 +87,7 @@ const formHtml = render(
     </fieldset>`
 );
 const description = render(
-  html`<h1>IntersectionObserver visulizer</h1>
+  html`<h1>IntersectionObserver visualizer</h1>
     <p>
       Visualize the
       <a
@@ -125,11 +125,6 @@ app.addEventListener("change", (event) => {
       console.warn(
         `${name} + ${oppositeKey} is overflowing 100 or -100: setting ${oppositeKey} to zero`
       );
-      // const newValue = 0;
-      // state[oppositeKey] = newValue;
-      // oppositeEl.value = `${newValue}`;
-      // //@ts-expect-error trust me bro
-      // oppositeEl.nextElementSibling.value = `${newValue}`;
     }
   } catch (err) {
     // its ok

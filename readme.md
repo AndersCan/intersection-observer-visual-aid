@@ -10,7 +10,7 @@ Playground for visualising what the IntersectionObserver is doing. Created to hi
 
 In most cases, the `IntersectionObserver` is used to tell us when an element is in the viewport. The default behaviour is to report an element as visible when just `1px` of an element is visible. This is often not what we want, so we have to tweak what should be determined as "visible".
 
-We do this by changing the `threshold` and the `rootMargin` options [(docs)](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#rootmargin)
+We do this tweaking by changing the `threshold` and the `rootMargin` options [(docs)](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API#rootmargin)
 
 ## Playground
 
