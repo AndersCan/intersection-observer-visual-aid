@@ -43,7 +43,7 @@ const w=function(){const n=document.createElement("link").relList;if(n&&n.suppor
         oninput="this.nextElementSibling.value = this.value+ '%'"
       />
       <output>${a.marginBot}%</output>
-    </fieldset>`),A=d(g`<h1>IntersectionObserver visulizer</h1>
+    </fieldset>`),A=d(g`<h1>IntersectionObserver visualizer</h1>
     <p>
       Visualize the
       <a
