@@ -26,26 +26,61 @@ const oppositeMap = {
 } as const;
 
 const app = document.querySelector<HTMLDivElement>("#app")!;
-const heights = [...Array(12).keys()].slice(1).map((key) => {
+const sizes = [...Array(12).keys()].slice(1).map((key) => {
   return key * 10;
 });
 
+function renderRow(size: number) {
+  return render(
+    html`<div class="flex-row">
+      ${render(
+        sizes.map(() => {
+          return renderBox(size);
+        })
+      )}
+    </div>`
+  );
+}
+
+function renderBox(size: number) {
+  return render(
+    html` <div class="box box-height-${size} box-width-${size}">
+      ${size}
+      <div class="intersection-box intersection-box--top"></div>
+      <div class="intersection-box intersection-box--bot"></div>
+      <div class="intersection-box intersection-box--left"></div>
+      <div class="intersection-box intersection-box--right"></div>
+    </div>`
+  );
+}
+
 const boxes = render(
-  heights.map((height) => {
-    return render(
-      html`<div class="block">
-        <div class="box box-${height}">
-          ${height}vh
-          <div class="intersection-box intersection-box--top"></div>
-          <div class="intersection-box intersection-box--bot"></div>
-        </div>
-      </div>`
-    );
+  sizes.map((size) => {
+    return renderRow(size);
   })
 );
 
+// const verticalV = render(
+//   html`<div class="flex-row">
+//     ${render(
+//       sizes.map((height) => {
+//         return render(
+//           html` <div class="box box-${20} box-width-${height}">
+//             ${height}vw
+//             <div class="intersection-box intersection-box--top"></div>
+//             <div class="intersection-box intersection-box--bot"></div>
+//             <div class="intersection-box intersection-box--left"></div>
+//             <div class="intersection-box intersection-box--right"></div>
+//           </div>`
+//         );
+//       })
+//     )}
+//   </div>`
+// );
+
 const formHtml = render(
-  html` <fieldset>
+  html`
+    <fieldset>
       <legend>Intersection Threshold</legend>
       <input
         type="range"
@@ -73,6 +108,20 @@ const formHtml = render(
     </fieldset>
 
     <fieldset>
+      <legend>Margin right</legend>
+      <input
+        type="range"
+        value="${state.marginRight}"
+        min="-49"
+        max="49"
+        step="1"
+        name="marginRight"
+        oninput="this.nextElementSibling.value = this.value + '%'"
+      />
+      <output>${state.marginRight}%</output>
+    </fieldset>
+
+    <fieldset>
       <legend>Margin bottom</legend>
       <input
         type="range"
@@ -84,7 +133,22 @@ const formHtml = render(
         oninput="this.nextElementSibling.value = this.value+ '%'"
       />
       <output>${state.marginBot}%</output>
-    </fieldset>`
+    </fieldset>
+
+    <fieldset>
+      <legend>Margin left</legend>
+      <input
+        type="range"
+        value="${state.marginLeft}"
+        min="-49"
+        max="49"
+        step="1"
+        name="marginLeft"
+        oninput="this.nextElementSibling.value = this.value + '%'"
+      />
+      <output>${state.marginLeft}%</output>
+    </fieldset>
+  `
 );
 const description = render(
   html`<h1>IntersectionObserver visualizer</h1>
@@ -165,6 +229,10 @@ function observe(props: StateProps) {
   // height
   floater.style.height = `${100 + marginBot + marginTop}%`;
 
+  console.log("hasdf");
+  floater.style.left = `${marginLeft * -1}%`;
+  floater.style.width = `${100 + marginLeft + marginRight}%`;
+
   // const boxes = Array.from(document.querySelectorAll(".box-110") || []);
   const boxes = Array.from(document.querySelectorAll(".box") || []);
   for (const box of boxes) {
@@ -187,5 +255,24 @@ function observe(props: StateProps) {
   for (const box of interSectionboxesBot) {
     const tPercent = threshold * 100;
     box.style.top = `${100 - tPercent}%`;
+  }
+
+  const interSectionboxesLeft = Array.from(
+    document.querySelectorAll(".intersection-box.intersection-box--left") || []
+  ) as HTMLDivElement[];
+
+  for (const box of interSectionboxesLeft) {
+    const tPercent = threshold * 100;
+    box.style.width = `${tPercent}%`;
+  }
+
+  const interSectionboxesRight = Array.from(
+    document.querySelectorAll(".intersection-box.intersection-box--right") || []
+  ) as HTMLDivElement[];
+
+  for (const box of interSectionboxesRight) {
+    const tPercent = threshold * 100;
+    box.style.width = `${tPercent}%`;
+    box.style.left = `${100 - tPercent}%`;
   }
 }

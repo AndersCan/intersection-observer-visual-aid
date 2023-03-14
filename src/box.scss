@@ -15,10 +15,16 @@
   width: 50vw;
   background-color: antiquewhite;
   position: relative;
+  flex-shrink: 0;
+  @for $i from 1 through 11 {
+    &.box-height-#{$i * 10} {
+      height: #{$i * 10}vh;
+    }
+  }
 
   @for $i from 1 through 11 {
-    &.box-#{$i * 10} {
-      height: #{$i * 10}vh;
+    &.box-width-#{$i * 10} {
+      width: #{$i * 10}vw;
     }
   }
 
@@ -55,4 +61,38 @@
       #465298 20px
     );
   }
+
+  &--left {
+    height: 100%;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px
+    );
+  }
+
+  &--right {
+    height: 100%;
+    left: 100%;
+    background: repeating-linear-gradient(
+      45deg,
+      #606dbc,
+      #606dbc 10px,
+      #465298 10px,
+      #465298 20px
+    );
+  }
+}
+
+.flex-row {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  flex-grow: 0;
+  flex-shrink: 0;
+  max-width: 100vw;
+  overflow: scroll;
 }
