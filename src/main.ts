@@ -9,6 +9,7 @@ import { assert } from "./assert";
 
 export interface StateProps {
   threshold: number;
+  time: number;
   marginTop: number;
   marginBot: number;
   marginLeft: number;
@@ -19,6 +20,7 @@ const state = getInitialState();
 
 const oppositeMap = {
   threshold: false,
+  time: false,
   marginTop: "marginBot",
   marginBot: "marginTop",
   marginLeft: "marginRight",
@@ -45,11 +47,12 @@ function renderRow(size: number) {
 function renderBox(size: number) {
   return render(
     html` <div class="box box-height-${size} box-width-${size}">
-      ${size}
+      <div class="inner-box"></div>
       <div class="intersection-box intersection-box--top"></div>
       <div class="intersection-box intersection-box--bot"></div>
       <div class="intersection-box intersection-box--left"></div>
       <div class="intersection-box intersection-box--right"></div>
+      <span class="box-text">${size}</span>
     </div>`
   );
 }
@@ -60,28 +63,11 @@ const boxes = render(
   })
 );
 
-// const verticalV = render(
-//   html`<div class="flex-row">
-//     ${render(
-//       sizes.map((height) => {
-//         return render(
-//           html` <div class="box box-${20} box-width-${height}">
-//             ${height}vw
-//             <div class="intersection-box intersection-box--top"></div>
-//             <div class="intersection-box intersection-box--bot"></div>
-//             <div class="intersection-box intersection-box--left"></div>
-//             <div class="intersection-box intersection-box--right"></div>
-//           </div>`
-//         );
-//       })
-//     )}
-//   </div>`
-// );
-
 const formHtml = render(
   html`
     <fieldset>
       <legend>Intersection Threshold</legend>
+      <output>${state.threshold}</output>
       <input
         type="range"
         value="${state.threshold}"
@@ -89,12 +75,12 @@ const formHtml = render(
         max="1"
         step="0.1"
         name="threshold"
-        oninput="this.nextElementSibling.value = this.value"
+        oninput="this.previousElementSibling.value = this.value"
       />
-      <output>${state.threshold}</output>
     </fieldset>
     <fieldset>
       <legend>Margin top</legend>
+      <output>${state.marginTop}%</output>
       <input
         type="range"
         value="${state.marginTop}"
@@ -102,13 +88,13 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginTop"
-        oninput="this.nextElementSibling.value = this.value + '%'"
+        oninput="this.previousElementSibling.value = this.value + '%'"
       />
-      <output>${state.marginTop}%</output>
     </fieldset>
 
     <fieldset>
       <legend>Margin right</legend>
+      <output>${state.marginRight}%</output>
       <input
         type="range"
         value="${state.marginRight}"
@@ -116,13 +102,13 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginRight"
-        oninput="this.nextElementSibling.value = this.value + '%'"
+        oninput="this.previousElementSibling.value = this.value + '%'"
       />
-      <output>${state.marginRight}%</output>
     </fieldset>
 
     <fieldset>
       <legend>Margin bottom</legend>
+      <output>${state.marginBot}%</output>
       <input
         type="range"
         value="${state.marginBot}"
@@ -130,13 +116,13 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginBot"
-        oninput="this.nextElementSibling.value = this.value+ '%'"
+        oninput="this.previousElementSibling.value = this.value+ '%'"
       />
-      <output>${state.marginBot}%</output>
     </fieldset>
 
     <fieldset>
       <legend>Margin left</legend>
+      <output>${state.marginLeft}%</output>
       <input
         type="range"
         value="${state.marginLeft}"
@@ -144,9 +130,23 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginLeft"
-        oninput="this.nextElementSibling.value = this.value + '%'"
+        oninput="this.previousElementSibling.value = this.value + '%'"
       />
-      <output>${state.marginLeft}%</output>
+    </fieldset>
+
+    <fieldset>
+      <legend>Extra: Time in viewport</legend>
+      <label>Note: Not part of the IntersectionObserver spec</label>
+      <output>${state.time}s</output>
+      <input
+        type="range"
+        value="${state.marginLeft}"
+        min="0"
+        max="10"
+        step="1"
+        name="time"
+        oninput="this.previousElementSibling.value = this.value + 's'"
+      />
     </fieldset>
   `
 );
@@ -224,12 +224,15 @@ function observe(props: StateProps) {
       threshold: [threshold],
     }
   );
+
+  var style = document.documentElement.style;
+  style.setProperty("--duration", `${state.time}s`);
+
   // top is equal to `top`
   floater.style.top = `${-marginTop}%`;
   // height
   floater.style.height = `${100 + marginBot + marginTop}%`;
 
-  console.log("hasdf");
   floater.style.left = `${marginLeft * -1}%`;
   floater.style.width = `${100 + marginLeft + marginRight}%`;
 

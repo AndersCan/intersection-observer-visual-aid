@@ -9,6 +9,10 @@ main {
 fieldset {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: center;
+  align-items: center;
 }
 fieldset input {
   width: clamp(15ch, 50%, 30ch);

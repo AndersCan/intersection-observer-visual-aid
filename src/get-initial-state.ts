@@ -4,6 +4,7 @@ export function getInitialState(): StateProps {
   const props = new URL(location.href).searchParams;
   const state: StateProps = {
     threshold: Number(props.get("threshold") || 0),
+    time: Number(props.get("time") || 0),
     marginTop: Number(props.get("marginTop") || -20),
     marginBot: Number(props.get("marginBot") || -20),
     marginLeft: Number(props.get("marginLeft") || -10),
