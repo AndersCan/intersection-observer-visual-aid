@@ -2,8 +2,25 @@ body {
   background-color: azure;
 }
 main {
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  font-family: "Figtree", Verdana, Geneva, Tahoma, sans-serif;
   margin: 0 2rem;
+}
+
+.main-heading {
+  font-size: 33px;
+  font-weight: 100;
+}
+.link {
+  border-radius: 1px;
+  border-bottom: 1px solid black;
+  text-decoration: none;
+  font-weight: 100;
+  letter-spacing: 2px;
+  color: black;
+  transition: color 0.25s;
+}
+.link:hover {
+  color: rgb(81, 107, 185);
 }
 
 fieldset {
@@ -22,4 +39,5 @@ output {
 }
 p {
   width: clamp(80vw, 50%, 75ch);
+  font-size: 20px;
 }

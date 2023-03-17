@@ -75,6 +75,7 @@ const formHtml = render(
         max="1"
         step="0.1"
         name="threshold"
+        data-unit=" "
         oninput="this.previousElementSibling.value = this.value"
       />
     </fieldset>
@@ -88,7 +89,8 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginTop"
-        oninput="this.previousElementSibling.value = this.value + '%'"
+        data-unit="%"
+        oninput="this.previousElementSibling.value = this.value + this.dataset.unit"
       />
     </fieldset>
 
@@ -102,7 +104,8 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginRight"
-        oninput="this.previousElementSibling.value = this.value + '%'"
+        data-unit="%"
+        oninput="this.previousElementSibling.value = this.value + this.dataset.unit"
       />
     </fieldset>
 
@@ -116,6 +119,7 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginBot"
+        data-unit="%"
         oninput="this.previousElementSibling.value = this.value+ '%'"
       />
     </fieldset>
@@ -130,7 +134,8 @@ const formHtml = render(
         max="49"
         step="1"
         name="marginLeft"
-        oninput="this.previousElementSibling.value = this.value + '%'"
+        data-unit="%"
+        oninput="this.previousElementSibling.value = this.value + this.dataset.unit"
       />
     </fieldset>
 
@@ -140,32 +145,33 @@ const formHtml = render(
       <output>${state.time}s</output>
       <input
         type="range"
-        value="${state.marginLeft}"
+        value="${state.time}"
         min="0"
         max="10"
         step="1"
         name="time"
-        oninput="this.previousElementSibling.value = this.value + 's'"
+        data-unit="s"
+        oninput="this.previousElementSibling.value = this.value + this.dataset.unit"
       />
     </fieldset>
   `
 );
 const description = render(
-  html`<h1>IntersectionObserver visualizer</h1>
+  html`<h1 class="main-heading">IntersectionObserver visualizer</h1>
     <p>
-      Visualize the
+      Visualization of the
       <a
+        class="link"
         href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API"
         >IntersectionObserver</a
-      >
-      with this playground. Check
+      >. Check
       <a
+        class="link"
         href="https://github.com/AndersCan/intersection-observer-visual-aid#readme"
         >the repo for</a
       >
       more info.
-    </p>
-    <p>Note: Changing margin left and right has not been added</p>`
+    </p> `
 );
 
 app.innerHTML = description + formHtml + boxes;
@@ -196,8 +202,28 @@ app.addEventListener("change", (event) => {
 
   state[name] = value;
   observe(state);
+
+  const newUrl = setParamsOnUrl(location.href, state);
+  history.pushState(state, "", newUrl);
 });
 
+window.addEventListener("popstate", (e) => {
+  Object.keys(e.state).forEach((key) => {
+    const newValue = e.state[key];
+    //@ts-expect-error should be fine :)
+    state[key] = newValue;
+    const el = document.querySelector(`input[name="${key}"]`);
+    assert(el);
+    //@ts-expect-error should be fine :)
+    assert(el.dataset.unit);
+    assert(el.previousElementSibling);
+    //@ts-expect-error should be fine :)
+    el.value = newValue;
+    //@ts-expect-error should be fine :)
+    el.previousElementSibling.value = newValue + el.dataset.unit;
+  });
+  observe(state);
+});
 let io: IntersectionObserver | undefined = undefined;
 
 observe(state);
@@ -278,4 +304,20 @@ function observe(props: StateProps) {
     box.style.width = `${tPercent}%`;
     box.style.left = `${100 - tPercent}%`;
   }
+}
+
+function setParamsOnUrl(url: string, rec: Record<string, any>) {
+  const urlll = new URL(url);
+  const x = toStringRecord(rec);
+  Object.entries(x).forEach(([key, value]) => {
+    urlll.searchParams.set(key, value);
+  });
+  return urlll.toString();
+}
+
+function toStringRecord(rec: Record<string, any>): Record<string, string> {
+  return Object.keys(rec).reduce((prev, current) => {
+    prev[current] = `${rec[current]}`;
+    return prev;
+  }, {} as Record<string, string>);
 }
